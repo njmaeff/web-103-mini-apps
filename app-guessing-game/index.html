@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Guessing Game</title>
+        <style>
+            :root {
+                background-color: #f0f0f0;
+                color: #0f0f0f;
+            }
+
+            body {
+                max-width: 960px;
+                min-height: 100vh;
+
+                margin: 0 auto;
+
+                background-color: lightblue;
+                color: #0f0f0f;
+            }
+
+            header {
+                text-align: center;
+                padding: 2rem;
+            }
+
+            main {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 0 5rem;
+            }
+
+            main button {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        </style>
+    </head>
+    <body>
+        <header><h1>Guessing Game</h1></header>
+
+        <main class="game">
+            <div class="input">
+                <h2>Pick a number between 1 and 10</h2>
+                <input id="guess" type="text" />
+                <button onclick="checkAnswer()">Check</button>
+            </div>
+        </main>
+        <script>
+            let score = 0;
+            let randomNumber = generateRandomNumber();
+            const input = document.querySelector("#guess");
+
+            function checkAnswer() {
+                if (input.value == randomNumber) {
+                    score++;
+                    console.log(
+                        "You guessed correct!\nYour current score is: " + score
+                    );
+                    randomNumber = generateRandomNumber();
+                } else {
+                    console.log("Incorrect! Please try again.");
+                }
+
+                input.value = "";
+            }
+
+            function generateRandomNumber() {
+                return Math.floor(Math.random() * 10);
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Single Blog App</title>
+        <style>
+            :root {
+                background-color: #f0f0f0;
+                color: #0f0f0f;
+            }
+
+            body {
+                max-width: 960px;
+                min-height: 100vh;
+
+                margin: 0 auto;
+
+                background-color: lightgreen;
+                color: #0f0f0f;
+            }
+
+            header {
+                text-align: center;
+                padding: 2rem;
+            }
+
+            main {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                margin: 0 5rem;
+            }
+
+            main div.blogInput {
+                align-self: center;
+            }
+
+            main button {
+                display: block;
+                margin: 0.5rem 0;
+            }
+
+            main section.blog {
+                margin: 4rem 0;
+            }
+
+        </style>
+    </head>
+    <body>
+        <header><h1>Single Blog App</h1></header>
+
+        <main>
+            <div class="blogInput">
+                <p>Title</p>
+                <input id="postTitle" type="text" />
+                <p>Content</p>
+
+                <textarea id="postContent"></textarea>
+                <button onclick="addBlogPostToDom()">Post</button>
+            </div>
+
+            <section class="blog"></section>
+        </main>
+        <script>
+            let blogCount = 0;
+
+            window.addEventListener("load", function () {
+                let storedBlog = window.localStorage.getItem("blog");
+                if (storedBlog) {
+                    addBlogPostToDom(JSON.parse(storedBlog));
+                    blogCount++;
+                }
+            });
+
+            /**
+             * @param {{title: string, content: string}} [blog] - optional blog object
+             */
+            function addBlogPostToDom(blog) {
+                // this function can receive an optional blog object but if it doesn't, then it will create one using the inputs
+                if (!blog) {
+                    blog = makeBlogPostObjectFromInput();
+                }
+
+                // only allow one blog at this time
+                if (blogCount < 1) {
+                    const blogTitle = document.createElement("H2");
+                    blogTitle.innerText = blog.title;
+
+                    // create body element
+                    const blogBody = document.createElement("P");
+                    blogBody.innerText = blog.content;
+
+                    // create article for blog
+                    const blogItem = document.createElement("ARTICLE");
+                    blogItem.append(blogTitle, blogBody);
+
+                    // add blog article to main html blog container
+                    document.querySelector(".blog").appendChild(blogItem);
+
+                    // add blog to localstorage
+                    window.localStorage.setItem("blog", JSON.stringify(blog));
+                    blogCount++;
+                } else {
+                    alert("Sorry! You may only post one blog at this time!");
+                }
+            }
+
+            function makeBlogPostObjectFromInput() {
+                // get dom input elements
+                const title = document.querySelector("#postTitle");
+                const content = document.querySelector("#postContent");
+
+                // validate blog fields
+                if (!title.value) {
+                    alert("You must provide a title!");
+                }
+
+                if (!content.value) {
+                    alert("You must provide content!");
+                }
+
+                // create blog object
+                const blog = {
+                    title: title.value,
+                    content: content.value,
+                };
+
+                // reset inputs
+                title.value = "";
+                content.value = "";
+
+                // return blog object from the function
+                return blog;
+            }
+        </script>
+    </body>
+</html>

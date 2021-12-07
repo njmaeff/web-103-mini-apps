@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Slide Show</title>
+</head>
+<body>
+<h1>Slide Show</h1>
+<image id="slide" src="" width="600">
+    <div>
+        <button onclick="previousImage()">Previous Image</button>
+        <button onclick="nextImage()">Next Image</button>
+    </div>
+    <script>
+        const images = [
+            "https://images.pexels.com/photos/145939/pexels-photo-145939.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500",
+            "https://media.wired.com/photos/59822d6fbc944559d607e43a/master/pass/PeacockHP-691483428.jpg",
+            "https://media.wired.com/photos/593261cab8eb31692072f129/master/pass/85120553.jpg",
+            "https://i.natgeofe.com/k/c02b35d2-bfd7-4ed9-aad4-8e25627cd481/komodo-dragon-head-on_2x1.jpg",
+            "https://navs.org/wp-content/uploads/bb-plugin/cache/bunny-landscape.jpg",
+            "https://i.insider.com/5c79a8cfeb3ce837863155f5?width=750&format=jpeg&auto=webp"
+        ];
+
+        let imageIndex = 0;
+
+        function nextImage() {
+            imageIndex++;
+            if (imageIndex > images.length - 1) {
+                imageIndex = 0;
+            }
+            document.getElementById("slide").src = images[imageIndex];
+        }
+
+        function previousImage() {
+            imageIndex--;
+            if (imageIndex < 0) {
+                imageIndex = images.length - 1;
+            }
+            document.getElementById("slide").src = images[imageIndex];
+        }
+
+        window.addEventListener("load", function() {
+            document.getElementById("slide").src = images[imageIndex];
+        });
+
+    </script>
+</body>
+</html>

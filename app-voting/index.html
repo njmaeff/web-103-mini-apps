@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Voting App</title>
+        <style>
+            div.wrapper {
+                display: flex;
+                flex-direction: column;
+                max-width: 400px;
+                align-items: center;
+                margin: 0 auto;
+            }
+
+            /* table design from https://dev.to/dcodeyt/creating-beautiful-html-tables-with-css-428l */
+            .styled-table {
+                border-collapse: collapse;
+                font-size: 0.9rem;
+                font-family: sans-serif;
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+            }
+
+            .styled-table thead tr {
+                background-color: #009879;
+                color: #ffffff;
+                text-align: left;
+            }
+
+            .styled-table th,
+            .styled-table td {
+                padding: 0.7rem 1rem;
+            }
+
+            .styled-table tbody tr {
+                border-bottom: thin solid #dddddd;
+            }
+
+            .styled-table tbody tr:nth-of-type(even) {
+                background-color: #f3f3f3;
+            }
+
+            .styled-table tbody tr:last-of-type {
+                border-bottom: medium solid #009879;
+            }
+
+            div.show {
+                margin: 1rem;
+            }
+
+            .show > button {
+                margin: 0 0.2rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <h1>Voting App</h1>
+            <table class="styled-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Totals</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Dom</td>
+                        <td></td>
+                        <td>
+                            <button>Vote</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Melissa</td>
+                        <td></td>
+                        <td>
+                            <button>Vote</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ken</td>
+                        <td></td>
+                        <td>
+                            <button>Vote</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="show">
+                <button id="update-totals">Update Totals</button>
+                <button id="reset-votes">Reset Votes</button>
+            </div>
+        </div>
+        <script>
+            let votes = [];
+            const candidates = document.querySelectorAll("tbody > tr");
+
+            // add click listener to the button on each table row. Use the row index to save the votes in the votes array.
+            candidates.forEach(function(candidate, candidateIndex) {
+                const button = candidate.querySelector("button");
+                button.addEventListener("click", function() {
+                    if (!votes[candidateIndex]) {
+                        // vote may be undefined initially
+                        votes[candidateIndex] = 1;
+                    } else {
+                        votes[candidateIndex]++;
+                    }
+                });
+            });
+
+            // get all rows which are candidates and write votes amount in the totals column
+            document
+                .getElementById("update-totals")
+                .addEventListener("click", function() {
+                    const candidates =
+                        document.querySelectorAll("tbody > tr");
+                    candidates.forEach(function(
+                        candidate,
+                        candidateIndex
+                    ) {
+                        let voteResult = votes[candidateIndex];
+                        // vote result may be undefined if no one voted
+                        if (!voteResult) {
+                            voteResult = 0;
+                        }
+
+                        candidate.children[1].innerText = voteResult;
+                    });
+                });
+
+            // clear the votes results array and local storage
+            document
+                .getElementById("reset-votes")
+                .addEventListener("click", function() {
+                    const candidates =
+                        document.querySelectorAll("tbody > tr");
+                    for (const candidate of candidates) {
+                        candidate.children[1].innerText = "";
+                    }
+                    votes = [];
+                    localStorage.removeItem("votingResults");
+                });
+
+            // load voting results on page load if they exist in local storage
+            window.addEventListener("load", function() {
+                const results =
+                    window.localStorage.getItem("votingResults");
+                // our results may not be saved in local storage
+                if (results) {
+                    votes = JSON.parse(results);
+                }
+            });
+
+            // save voting results when browser is closing or refreshing
+            window.addEventListener("beforeunload", function(e) {
+                window.localStorage.setItem(
+                    "votingResults",
+                    JSON.stringify(votes)
+                );
+            });
+        </script>
+    </body>
+</html>

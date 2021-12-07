@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>The Final Countdown</title>
+        <style>
+            :root {
+                background-color: #f0f0f0;
+                color: #0f0f0f;
+            }
+
+            body {
+                max-width: 960px;
+                min-height: 100vh;
+
+                margin: 0 auto;
+
+                background-color: lightsalmon;
+                color: #0f0f0f;
+            }
+
+            header {
+                text-align: center;
+                padding: 2rem;
+            }
+
+            main {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 0 5rem;
+            }
+
+            main button {
+                display: block;
+                margin: 0.5rem 0;
+            }
+        </style>
+    </head>
+    <body>
+        <header><h1>The Final Countdown</h1></header>
+
+        <main class="game">
+            <div class="input">
+                <h2>Start the timer at this many seconds</h2>
+                <input id="input" type="text" />
+                <button onclick="countDown()">Run</button>
+                <p>
+                    Seconds Remaining:
+                    <span id="seconds"></span>
+                </p>
+            </div>
+        </main>
+        <script>
+            const input = document.querySelector("#input");
+            const secondsIndicator = document.querySelector("#seconds");
+
+            let countDownSeconds;
+
+            // set audio source
+            const audio = new Audio("countdown.wav");
+            // set the current start time in seconds for the audio
+            audio.currentTime = 24;
+
+            function countDown() {
+                audio.play();
+                countDownSeconds = parseInt(input.value);
+                secondsIndicator.innerText = countDownSeconds;
+
+                const interval = setInterval(function () {
+                    countDownSeconds--;
+                    secondsIndicator.innerText = countDownSeconds;
+
+                    if (countDownSeconds === 0) {
+                        clearInterval(interval);
+                        alertCountDownFinished();
+                    }
+                }, 1000);
+
+                input.value = "";
+            }
+
+            // run the alert in a set timeout so we can clear the seconds to zero first in the html
+            function alertCountDownFinished() {
+                setTimeout(function () {
+                    audio.pause();
+                    audio.currentTime = 24;
+                    alert("We have finished our countdown!");
+                }, 0);
+            }
+        </script>
+    </body>
+</html>
